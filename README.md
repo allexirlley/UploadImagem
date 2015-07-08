@@ -1,5 +1,5 @@
 # UploadImagem
-Essa classe é responsavel por fazer o upload de imagens e seu tratamento
+Essa classe é responsavel por fazer o upload de imagens e seu tratamento.<br>
 Deve ser passado o todo o $_FILES para a classe
 
 ## Exemplo
