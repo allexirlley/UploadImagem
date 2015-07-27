@@ -1,7 +1,9 @@
 <?php
 /**
 * Essa classe é responsavel por fazer o upload de imagens e seu tratamento
- * Deve ser passado o todo o $_FILES para a classe
+* Deve ser passado o todo o $_FILES para a classe
+* @deprecated Somente Imagem JPG, PNG
+* @exemple UploadImagem($_FILES)
 */
 class UploadImagem {
     private $imagem;
@@ -10,6 +12,9 @@ class UploadImagem {
     private $width;
     private $height;
     
+    /**
+    * A 
+    */
     function __construct( array $imagem ){
         $this->nome = $imagem['imagem']['name'];
         switch( $imagem['imagem']['type'] ){
@@ -23,7 +28,8 @@ class UploadImagem {
                 $this->imagem = $imagem['imagem'];
                 break;
             default:
-                return "O formato dessa imagem não é valido por favor use 'JPG' ou 'PNG'";
+                Alerta::inserirAlerta('erro', "O formato dessa imagem não é valido por favor use 'JPG' ou 'PNG'");
+                return false;
         }
     }
     
@@ -37,18 +43,34 @@ class UploadImagem {
         $this->nome = (string)strip_tags(trim($nome));
     }
     
+    /**
+    * Esse metodo define o caminho da imagem, se não definido a imagem vai para a pasta onde script está sendo execultado
+    * @exemple caminho/
+    */
     function setPath($path) {
         $this->path = (string)strip_tags(trim($path));
     }
     
+    /**
+    * Esse metodo define o Width da imagem, se setWidth não estiver difinino e nem o setHeight a imagem vai com o seu tamanho original, se somente esse metodo estiver definido a classe vai redimencionar proporcionalmente a imagem
+    * @exemple setWidth(300)
+    */
     public function setWidth($width) {
         $this->width = (int)strip_tags(trim($width));
     }
-
+    
+    /**
+    * Esse metodo define o Height da imagem, se setHeight não estiver difinino e nem o setWidth a imagem vai com o seu tamanho original, se somente esse metodo estiver definido a classe vai redimencionar proporcionalmente a imagem
+    * @exemple setHeight(300)
+    */
     public function setHeight($height) {
         $this->height = (int)strip_tags(trim($height));
     }
-
+    
+    /**
+    * Depois de todos os metodos definidos, só utilizar esse metodo para realizar upload
+    * @exemple upload()
+    */
     public function upload(){
         switch( $this->imagem['type'] ){
             case 'image/jpg':
@@ -61,7 +83,8 @@ class UploadImagem {
                 $imagem = imagecreatefrompng($this->imagem['tmp_name']);
                 break;
             default:
-                return "Problema ao fazer upload de imagens";
+                Alerta::inserirAlerta('erro', "Problema ao fazer upload de imagens");
+                return false;
         }
         $width = imagesx($imagem);
         $height = imagesy($imagem);
